@@ -34,6 +34,9 @@ type Config struct {
 
 	General CGeneral `mapstructure:"general" json:"general,omitempty" yaml:"general,omitempty"`
 	Logging CLogging `mapstructure:"logging" json:"logging,omitempty" yaml:"logging,omitempty"`
+
+	Loader   `mapstructure:"loader,omitempty" json:"loader,omitempty" yaml:"loader,omitempty"`
+	SpecDirs `mapstructure:"specs_dirs,omitempty" json:"specs_dirs,omitempty" yaml:"specs_dirs,omitempty"`
 }
 
 type CGeneral struct {
@@ -99,6 +102,9 @@ func GenDefault(viper *v.Viper) {
 	viper.SetDefault("logging.json_format", false)
 	viper.SetDefault("logging.enable_emoji", true)
 	viper.SetDefault("logging.color", true)
+
+	viper.SetDefault("loader", "dir")
+	viper.SetDefault("specs_dirs", []string{})
 }
 
 func (g *CGeneral) HasDebug() bool {

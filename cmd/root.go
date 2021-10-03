@@ -47,7 +47,7 @@ var (
 
 func initConfig(config *specs.Config) {
 	// Set env variable
-	config.Viper.SetEnvPrefix(specs.WHIP_VERSION)
+	config.Viper.SetEnvPrefix(specs.WHIP_ENV_PREFIX)
 	config.Viper.BindEnv("config")
 	config.Viper.SetDefault("config", "")
 
@@ -74,7 +74,9 @@ func initCommand(rootCmd *cobra.Command, config *specs.Config) {
 	config.Viper.BindPFlag("config", pflags.Lookup("config"))
 	config.Viper.BindPFlag("general.debug", pflags.Lookup("debug"))
 
-	rootCmd.AddCommand()
+	rootCmd.AddCommand(
+		newHookCommand(config),
+	)
 }
 
 func Execute() {

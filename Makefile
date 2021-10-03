@@ -12,7 +12,7 @@ BUILD_PLATFORMS ?= -osarch="linux/amd64" -osarch="linux/386" -osarch="linux/arm"
 ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
 .PHONY: all
-all: deps build
+all: build
 
 .PHONY: fmt
 fmt:

@@ -130,5 +130,5 @@ hooks:
 $> whip remediate x_setup
 
 # Will call a specific hook
-$> whip hook elogind_postrm
+$> whip hook elogind.elogind_postrm
 ```
