@@ -21,9 +21,13 @@ package loader
 
 import (
 	"errors"
+	"io/ioutil"
+	"path"
+	"path/filepath"
 	"regexp"
 
-	specs "github.com/geaaru/pkg/specs"
+	log "github.com/geaaru/whip/pkg/logger"
+	specs "github.com/geaaru/whip/pkg/specs"
 )
 
 // LoaderDir permits to laod whip specs file
@@ -41,17 +45,19 @@ func NewLoaderDir(c *specs.Config) *LoaderDir {
 func (l *LoaderDir) Load() (map[string]*specs.SpecFile, error) {
 	var regexConfs = regexp.MustCompile(`.yml$|.yaml$`)
 
+	logger := log.GetDefaultLogger()
+
 	ans := make(map[string]*specs.SpecFile, 0)
-	if len(c.Config.SpecDirs) == 0 {
+	if len(l.Config.SpecDirs) == 0 {
 		return ans, errors.New("No specs dirs defined!")
 	}
 
-	for _, sdir := range w.Config.SpecDirs {
-		w.Logger.Debug("Checking directory", sdir, "...")
+	for _, sdir := range l.Config.SpecDirs {
+		logger.Debug("Checking directory", sdir, "...")
 
 		files, err := ioutil.ReadDir(sdir)
 		if err != nil {
-			w.Logger.Debug("Skip dir", sdir, ":", err.Error())
+			logger.Debug("Skip dir", sdir, ":", err.Error())
 			continue
 		}
 
@@ -61,24 +67,30 @@ func (l *LoaderDir) Load() (map[string]*specs.SpecFile, error) {
 			}
 
 			if !regexConfs.MatchString(file.Name()) {
-				w.Logger.Debug("File", file.Name(), "skipped.")
+				logger.Debug("File", file.Name(), "skipped.")
 				continue
 			}
 
 			sfile := path.Join(sdir, file.Name())
 			content, err := ioutil.ReadFile(sfile)
 			if err != nil {
-				w.Logger.Debug("On read file", file.Name(), ":", err.Error())
-				w.Logger.Debug("File", file.Name(), "skipped.")
+				logger.Debug("On read file", file.Name(), ":", err.Error())
+				logger.Debug("File", file.Name(), "skipped.")
 				continue
 			}
 
 			sf, err := specs.NewSpecFileFromYaml(content, sfile)
 			if err != nil {
-				return err
+				return ans, err
 			}
 
-			ans[file.Name()] = sf
+			ext := filepath.Ext(file.Name())
+			key := file.Name()
+			if len(ext) > 0 {
+				key = key[0 : len(key)-len(ext)]
+			}
+
+			ans[key] = sf
 		}
 
 	}

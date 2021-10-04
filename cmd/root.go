@@ -67,7 +67,7 @@ func initConfig(config *specs.Config) {
 func initCommand(rootCmd *cobra.Command, config *specs.Config) {
 	var pflags = rootCmd.PersistentFlags()
 
-	pflags.StringP("config", "c", "", "LXD Compose configuration file")
+	pflags.StringP("config", "c", "", "Whip configuration file")
 	pflags.BoolP("debug", "d", config.Viper.GetBool("general.debug"),
 		"Enable debug output.")
 

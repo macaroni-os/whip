@@ -35,8 +35,8 @@ type Config struct {
 	General CGeneral `mapstructure:"general" json:"general,omitempty" yaml:"general,omitempty"`
 	Logging CLogging `mapstructure:"logging" json:"logging,omitempty" yaml:"logging,omitempty"`
 
-	Loader   `mapstructure:"loader,omitempty" json:"loader,omitempty" yaml:"loader,omitempty"`
-	SpecDirs `mapstructure:"specs_dirs,omitempty" json:"specs_dirs,omitempty" yaml:"specs_dirs,omitempty"`
+	Loader   string   `mapstructure:"loader,omitempty" json:"loader,omitempty" yaml:"loader,omitempty"`
+	SpecDirs []string `mapstructure:"specs_dirs,omitempty" json:"specs_dirs,omitempty" yaml:"specs_dirs,omitempty"`
 }
 
 type CGeneral struct {
@@ -78,18 +78,21 @@ func (c *Config) GetLogging() *CLogging {
 }
 
 func (c *Config) Unmarshal() error {
-	err := c.Viper.ReadInConfig()
-	if err != nil {
-		return err
-	}
+	c.Viper.ReadInConfig()
 
-	err = c.Viper.Unmarshal(&c)
+	err := c.Viper.Unmarshal(&c)
 
 	return err
 }
 
 func (c *Config) Yaml() ([]byte, error) {
 	return yaml.Marshal(c)
+}
+
+func (c *Config) AddSpecsDirs(dirs []string) {
+	if len(dirs) > 0 {
+		c.SpecDirs = append(c.SpecDirs, dirs...)
+	}
 }
 
 func GenDefault(viper *v.Viper) {

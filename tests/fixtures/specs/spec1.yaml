@@ -1,0 +1,16 @@
+hooks:
+  hook1:
+    remediate: test
+    check: whip_work
+    description: |
+      A stupid test
+    keywords:
+      - test
+    actions:
+      - >-
+        echo "Test"
+
+entrypoint:
+  - /bin/sh
+  - -c
+

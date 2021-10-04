@@ -30,7 +30,7 @@ import (
 )
 
 func newHookCommand(config *specs.Config) *cobra.Command {
-	var cmd = &cobra.Commad{
+	var cmd = &cobra.Command{
 		Use:     "hook [filename.hook1] ... [filename.hookN]",
 		Short:   "Call a specific hook.",
 		Aliases: []string{"h"},
@@ -41,6 +41,10 @@ func newHookCommand(config *specs.Config) *cobra.Command {
 			}
 		},
 		Run: func(cmd *cobra.Command, args []string) {
+
+			specsDir, _ := cmd.Flags().GetStringSlice("specs-dir")
+
+			config.AddSpecsDirs(specsDir)
 
 			// Check instance
 			whip := loader.NewWhipHolder(config)
@@ -68,6 +72,10 @@ func newHookCommand(config *specs.Config) *cobra.Command {
 
 		},
 	}
+
+	flags := cmd.Flags()
+	flags.StringSlice("specs-dir", []string{},
+		"Define additional specs directory at runtime.")
 
 	return cmd
 }

@@ -16,19 +16,45 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 */
-package specs
+package executor
 
-type SpecFile struct {
-	File string `yaml:"-" json:"-"`
+import (
+	"fmt"
+	"io"
+	"os"
+)
 
-	Hooks      map[string]Hook `yaml:"hooks" json:"hooks"`
-	Entrypoint []string        `yaml:"entrypoint,omitempty" json:"entrypoint,omitempty"`
+type WhipWriter struct {
+	Type string
 }
 
-type Hook struct {
-	Remediate   string   `yaml:"remediate,omitempty" json:"remediate,omitempty"`
-	Check       string   `yaml:"check,omitempty" json:"check,omitempty"`
-	Description string   `yaml:"description,omitempty" json:"description,omitempty"`
-	Keywords    []string `yaml:"keywords,omitempty" json:"keywords,omitempty"`
-	Actions     []string `yaml:"actions,omitempty" json:"actions,omitempty"`
+func NewWhipWriter(t string) *WhipWriter {
+	return &WhipWriter{
+		Type: t,
+	}
+}
+
+func (e *WhipWriter) Write(p []byte) (int, error) {
+	var wr io.Writer
+
+	if e.Type == "stdout" {
+		wr = os.Stdout
+	} else {
+		wr = os.Stderr
+	}
+
+	fmt.Fprint(wr, string(p))
+
+	/*
+		logger.Msg("info", false, false,
+			logger.Aurora.Bold(
+				logger.Aurora.BrightCyan(string(p)),
+			),
+		)
+	*/
+	return len(p), nil
+}
+
+func (e *WhipWriter) Close() error {
+	return nil
 }

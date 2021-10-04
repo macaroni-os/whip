@@ -21,10 +21,11 @@ package loader
 import (
 	"errors"
 	"fmt"
-	"regexp"
+	"strings"
 
-	log "github.com/geaaru/pkg/logger"
-	specs "github.com/geaaru/pkg/specs"
+	exec "github.com/geaaru/whip/pkg/executor"
+	log "github.com/geaaru/whip/pkg/logger"
+	specs "github.com/geaaru/whip/pkg/specs"
 )
 
 type Loader interface {
@@ -35,6 +36,7 @@ type WhipHolder struct {
 	Config *specs.Config
 	Logger *log.Logger
 	Rules  map[string]*specs.SpecFile
+	Envs   map[string]string
 }
 
 func NewWhipHolder(config *specs.Config) *WhipHolder {
@@ -42,6 +44,7 @@ func NewWhipHolder(config *specs.Config) *WhipHolder {
 		Config: config,
 		Logger: log.NewLogger(config),
 		Rules:  make(map[string]*specs.SpecFile, 0),
+		Envs:   make(map[string]string, 0),
 	}
 
 	// Initialize logging
@@ -52,7 +55,6 @@ func NewWhipHolder(config *specs.Config) *WhipHolder {
 		}
 	}
 	ans.Logger.SetAsDefault()
-
 	return ans
 }
 
@@ -67,6 +69,63 @@ func (w *WhipHolder) GetRule(s string) (*specs.SpecFile, error) {
 	}
 
 	return nil, errors.New(fmt.Sprintf("No rule found with name %s", s))
+}
+
+func (w *WhipHolder) RunHook(h string) error {
+	dot := strings.Index(h, ".")
+
+	if dot < 0 {
+		return errors.New("Filename not specified on hook " + h)
+	}
+
+	filename := h[0:dot]
+	hname := h[dot+1:]
+
+	specFile, err := w.GetRule(filename)
+	if err != nil {
+		return err
+	}
+
+	hook, err := specFile.GetHook(hname)
+	if err != nil {
+		return err
+	}
+
+	if len(hook.GetActions()) == 0 {
+		return errors.New(fmt.Sprintf(
+			"Hook %s without actions!", h,
+		))
+	}
+
+	w.Logger.DebugC(fmt.Sprintf(
+		"Running hook %s of the file %s.", hname, filename))
+
+	wso := exec.NewWhipWriter("stdout")
+	wse := exec.NewWhipWriter("stderr")
+	for _, command := range hook.GetActions() {
+		executor := exec.NewExecutor(w.Config)
+		res, err := executor.RunCommandWithOutput(
+			command,
+			w.Envs,
+			wso, wse,
+			specFile.GetEntrypoint(),
+		)
+
+		if err != nil {
+			return errors.New(
+				fmt.Sprintf("[%s] Error - %s", h, err.Error()),
+			)
+		} else if res != 0 {
+			return errors.New(
+				fmt.Sprintf("[%s] Exiting with %d", h, res),
+			)
+		}
+	}
+
+	w.Logger.InfoC(fmt.Sprintf(
+		"[%s] Completed correctly.", h))
+
+	return nil
 }
 
 func (w *WhipHolder) LoadSpecs() error {
