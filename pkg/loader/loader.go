@@ -58,9 +58,9 @@ func NewWhipHolder(config *specs.Config) *WhipHolder {
 	return ans
 }
 
-func (w *WhipHolder) GetConfig() *specs.Config             { return w.Config }
-func (w *WhipHolder) GetLogger() *log.Logger               { return w.Logger }
-func (w *WhipHolder) GetRules() map[string]*specs.SpecFile { return w.Rules }
+func (w *WhipHolder) GetConfig() *specs.Config              { return w.Config }
+func (w *WhipHolder) GetLogger() *log.Logger                { return w.Logger }
+func (w *WhipHolder) GetRules() *map[string]*specs.SpecFile { return &w.Rules }
 
 func (w *WhipHolder) GetRule(s string) (*specs.SpecFile, error) {
 	ans, ok := w.Rules[s]

@@ -76,6 +76,7 @@ func initCommand(rootCmd *cobra.Command, config *specs.Config) {
 
 	rootCmd.AddCommand(
 		newHookCommand(config),
+		newListCommand(config),
 	)
 }
 
