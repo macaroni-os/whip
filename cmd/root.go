@@ -104,6 +104,7 @@ func Execute() {
 			v.SetConfigType("yml")
 			if v.Get("config") == "" {
 				config.Viper.AddConfigPath(".")
+				config.Viper.AddConfigPath("/etc")
 			} else {
 				v.SetConfigFile(v.Get("config").(string))
 			}
