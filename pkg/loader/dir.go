@@ -26,8 +26,8 @@ import (
 	"path/filepath"
 	"regexp"
 
-	log "github.com/geaaru/whip/pkg/logger"
-	specs "github.com/geaaru/whip/pkg/specs"
+	log "github.com/macaroni-os/whip/pkg/logger"
+	specs "github.com/macaroni-os/whip/pkg/specs"
 )
 
 // LoaderDir permits to laod whip specs file

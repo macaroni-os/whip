@@ -23,8 +23,8 @@ import (
 	"fmt"
 	"os"
 
-	loader "github.com/geaaru/whip/pkg/loader"
-	specs "github.com/geaaru/whip/pkg/specs"
+	loader "github.com/macaroni-os/whip/pkg/loader"
+	specs "github.com/macaroni-os/whip/pkg/specs"
 
 	tablewriter "github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"

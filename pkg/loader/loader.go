@@ -23,9 +23,9 @@ import (
 	"fmt"
 	"strings"
 
-	exec "github.com/geaaru/whip/pkg/executor"
-	log "github.com/geaaru/whip/pkg/logger"
-	specs "github.com/geaaru/whip/pkg/specs"
+	exec "github.com/macaroni-os/whip/pkg/executor"
+	log "github.com/macaroni-os/whip/pkg/logger"
+	specs "github.com/macaroni-os/whip/pkg/specs"
 )
 
 type Loader interface {

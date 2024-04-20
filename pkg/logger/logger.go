@@ -26,7 +26,7 @@ import (
 	"os"
 	"regexp"
 
-	specs "github.com/geaaru/whip/pkg/specs"
+	specs "github.com/macaroni-os/whip/pkg/specs"
 
 	"github.com/kyokomi/emoji"
 	"github.com/logrusorgru/aurora"

@@ -23,7 +23,7 @@ import (
 	"os"
 	"strings"
 
-	specs "github.com/geaaru/whip/pkg/specs"
+	specs "github.com/macaroni-os/whip/pkg/specs"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"

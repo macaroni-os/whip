@@ -25,8 +25,8 @@ import (
 	"os"
 	"os/exec"
 
-	log "github.com/geaaru/whip/pkg/logger"
-	specs "github.com/geaaru/whip/pkg/specs"
+	log "github.com/macaroni-os/whip/pkg/logger"
+	specs "github.com/macaroni-os/whip/pkg/specs"
 )
 
 type Executor struct {

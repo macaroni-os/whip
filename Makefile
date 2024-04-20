@@ -1,8 +1,8 @@
 GOLANG_VERSION=$(shell go env GOVERSION)
 
 # go tool nm ./luet | grep Commit
-override LDFLAGS += -X "github.com/geaaru/whip/cmd.BuildTime=$(shell date -u '+%Y-%m-%d %I:%M:%S %Z')"
-override LDFLAGS += -X "github.com/geaaru/whip/cmd.BuildCommit=$(shell git rev-parse HEAD)"
+override LDFLAGS += -X "github.com/macaroni-os/whip/cmd.BuildTime=$(shell date -u '+%Y-%m-%d %I:%M:%S %Z')"
+override LDFLAGS += -X "github.com/macaroni-os/whip/cmd.BuildCommit=$(shell git rev-parse HEAD)"
 
 NAME ?= lxd-compose
 PACKAGE_NAME ?= $(NAME)
