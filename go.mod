@@ -1,4 +1,4 @@
-module github.com/geaaru/whip
+module github.com/macaroni-os/whip
 
 go 1.20
 
