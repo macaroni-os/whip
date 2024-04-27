@@ -1,5 +1,4 @@
 /*
-
 Copyright (C) 2021  Daniele Rondina <geaaru@sabayonlinux.org>
 
 This program is free software: you can redistribute it and/or modify
@@ -14,7 +13,6 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
-
 */
 package cmd
 
@@ -30,11 +28,11 @@ import (
 )
 
 const (
-	cliName = `Copyright (c) 2021 - Daniele Rondina
+	cliName = `Copyright (c) 2021-2024 - Daniele Rondina
 
 Whip - System Status Inspector`
 
-	WHIP_VERSION = `0.0.1`
+	WHIP_VERSION = `0.0.3`
 )
 
 // Build time and commit information. This code is get from: https://github.com/mudler/luet/
