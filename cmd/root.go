@@ -28,11 +28,11 @@ import (
 )
 
 const (
-	cliName = `Copyright (c) 2021-2024 - Daniele Rondina
+	cliName = `Copyright (c) 2021-2026 - Daniele Rondina
 
 Whip - System Status Inspector`
 
-	WHIP_VERSION = `0.0.3`
+	WHIP_VERSION = `0.1.0`
 )
 
 // Build time and commit information. This code is get from: https://github.com/mudler/luet/
