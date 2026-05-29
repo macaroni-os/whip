@@ -22,11 +22,14 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"regexp"
 
 	loader "github.com/macaroni-os/whip/pkg/loader"
 	specs "github.com/macaroni-os/whip/pkg/specs"
 
 	tablewriter "github.com/olekukonko/tablewriter"
+	"github.com/olekukonko/tablewriter/renderer"
+	"github.com/olekukonko/tablewriter/tw"
 	"github.com/spf13/cobra"
 )
 
@@ -41,6 +44,8 @@ func newListCommand(config *specs.Config) *cobra.Command {
 
 			specsDir, _ := cmd.Flags().GetStringSlice("specs-dir")
 			tableMode, _ := cmd.Flags().GetBool("table")
+			filter, _ := cmd.Flags().GetString("filter")
+			var r *regexp.Regexp
 
 			config.AddSpecsDirs(specsDir)
 
@@ -54,21 +59,34 @@ func newListCommand(config *specs.Config) *cobra.Command {
 				os.Exit(1)
 			}
 
+			if filter != "" {
+				r = regexp.MustCompile(filter)
+				if r == nil {
+					fmt.Println("Invalid regex: %s", filter)
+					os.Exit(1)
+				}
+			}
+
 			if tableMode {
-				table := tablewriter.NewWriter(os.Stdout)
-				table.SetBorders(tablewriter.Border{
-					Left:   true,
-					Top:    true,
-					Right:  true,
-					Bottom: true,
-				})
-				table.SetHeader([]string{
-					"File", "Name", "Description"})
-				table.SetAutoWrapText(false)
+				table := tablewriter.NewTable(os.Stdout,
+					tablewriter.WithRenderer(renderer.NewBlueprint(tw.Rendition{
+						Settings: tw.Settings{
+							Separators: tw.Separators{
+								BetweenRows: tw.On,
+							},
+						},
+					})))
+				table.Header("File", "Hook", "Description")
 
 				for f, v := range *whip.GetRules() {
+
 					for n, h := range v.Hooks {
-						table.Append([]string{f, n, h.Description})
+						hName := fmt.Sprintf("%s.%s", f, n)
+						if r == nil || (r != nil && r.MatchString(hName)) {
+							table.Append([]string{
+								f, hName, h.Description,
+							})
+						}
 					}
 				}
 
@@ -78,8 +96,11 @@ func newListCommand(config *specs.Config) *cobra.Command {
 
 				for f, v := range *whip.GetRules() {
 					for n, _ := range v.Hooks {
-						fmt.Println(fmt.Sprintf("%s - %s",
-							f, n))
+						hName := fmt.Sprintf("%s.%s", f, n)
+						if r == nil || (r != nil && r.MatchString(hName)) {
+							fmt.Println(fmt.Sprintf("%s - %s.%s",
+								f, f, n))
+						}
 					}
 				}
 			}
@@ -91,6 +112,7 @@ func newListCommand(config *specs.Config) *cobra.Command {
 	flags.StringSlice("specs-dir", []string{},
 		"Define additional specs directory at runtime.")
 	flags.Bool("table", false, "Show hooks in table format.")
+	flags.StringP("filter", "f", "", "Filter hook matching string.")
 
 	return cmd
 }
