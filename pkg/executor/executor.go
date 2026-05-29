@@ -1,5 +1,4 @@
 /*
-
 Copyright (C) 2021  Daniele Rondina <geaaru@sabayonlinux.org>
 
 This program is free software: you can redistribute it and/or modify
@@ -14,7 +13,6 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
-
 */
 package executor
 
@@ -73,6 +71,9 @@ func (e *Executor) RunCommandWithOutput(command string, envs map[string]string,
 
 	cmd.Stdout = outBuffer
 	cmd.Stderr = errBuffer
+	if e.Config.GetGeneral().EnableStdin {
+		cmd.Stdin = os.Stdin
+	}
 	cmd.Env = elist
 
 	err := cmd.Start()

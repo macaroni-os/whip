@@ -1,5 +1,4 @@
 /*
-
 Copyright (C) 2021  Daniele Rondina <geaaru@sabayonlinux.org>
 
 This program is free software: you can redistribute it and/or modify
@@ -14,7 +13,6 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
-
 */
 package specs
 
@@ -40,7 +38,8 @@ type Config struct {
 }
 
 type CGeneral struct {
-	Debug bool `mapstructure:"debug,omitempty" json:"debug,omitempty" yaml:"debug,omitempty"`
+	Debug       bool `mapstructure:"debug,omitempty" json:"debug,omitempty" yaml:"debug,omitempty"`
+	EnableStdin bool `mapstructure:"enable_stdin,omitempty" json:"enable_stdin,omitempty" yaml:"enable_stdin,omitempty"`
 }
 
 type CLogging struct {
@@ -97,7 +96,6 @@ func (c *Config) AddSpecsDirs(dirs []string) {
 
 func GenDefault(viper *v.Viper) {
 	viper.SetDefault("general.debug", false)
-	viper.SetDefault("general.p2pmode", false)
 
 	viper.SetDefault("logging.level", "info")
 	viper.SetDefault("logging.enable_logfile", false)

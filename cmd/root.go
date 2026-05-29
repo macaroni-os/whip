@@ -68,9 +68,12 @@ func initCommand(rootCmd *cobra.Command, config *specs.Config) {
 	pflags.StringP("config", "c", "", "Whip configuration file")
 	pflags.BoolP("debug", "d", config.Viper.GetBool("general.debug"),
 		"Enable debug output.")
+	pflags.Bool("enable-stdin", config.Viper.GetBool("general.enable_stdin"),
+		"Enable Stdin handler.")
 
 	config.Viper.BindPFlag("config", pflags.Lookup("config"))
 	config.Viper.BindPFlag("general.debug", pflags.Lookup("debug"))
+	config.Viper.BindPFlag("general.enable_stdin", pflags.Lookup("enable-stdin"))
 
 	rootCmd.AddCommand(
 		newHookCommand(config),
